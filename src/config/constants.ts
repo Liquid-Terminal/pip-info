@@ -12,10 +12,19 @@ export const TOKEN_NAMES = {
   // EXAMPLE: "EXAMPLE",
 } as const;
 
+// NFT Contract Addresses pour différents projets
+export const NFT_CONTRACT_ADDRESSES = {
+  PIP: "0xbc4a26ba78ce05E8bCbF069Bbb87FB3E1dAC8DF8",
+  // Ajouter d'autres contrats NFT ici quand tu fork le projet
+  // EXAMPLE: "0x1234567890abcdef...",
+} as const;
+
 // Configuration API
 export const API_CONFIG = {
   HYPERLIQUID_BASE_URL: "https://api.hyperliquid.xyz",
   HOLDERS_BASE_URL: "https://api.hypurrscan.io",
+  HYPERSCAN_BASE_URL: "https://www.hyperscan.com/api/v2",
   REFRESH_INTERVAL: 30000, // 30 secondes pour les données token
   HOLDERS_REFRESH_INTERVAL: 600000, // 10 minutes pour les holders
+  NFT_HOLDERS_REFRESH_INTERVAL: 600000, // 10 minutes pour les NFT holders
 } as const;

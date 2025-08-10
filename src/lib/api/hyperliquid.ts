@@ -3,7 +3,7 @@ import { HyperLiquidTokenRequest, HyperLiquidTokenResponse, TokenInfo } from "@/
 const HYPERLIQUID_API_BASE = "https://api.hyperliquid.xyz";
 
 export class HyperLiquidAPI {
-  private static async makeRequest<T>(endpoint: string, data: any): Promise<T> {
+  private static async makeRequest<T>(endpoint: string, data: unknown): Promise<T> {
     try {
       const response = await fetch(`${HYPERLIQUID_API_BASE}${endpoint}`, {
         method: "POST",

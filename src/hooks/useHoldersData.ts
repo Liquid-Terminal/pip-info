@@ -1,12 +1,13 @@
 "use client";
 
 import { useState, useEffect } from "react";
+import { useDataFetching } from "./useDataFetching";
 import { HoldersAPI } from "@/lib/api/holders";
-import { Holder } from "@/lib/types/token";
+import { Holder, HoldersResponse } from "@/lib/types/token";
 
 interface UseHoldersDataProps {
   tokenName: string;
-  refreshInterval?: number; // en millisecondes
+  refreshInterval?: number;
 }
 
 interface UseHoldersDataReturn {
@@ -14,51 +15,56 @@ interface UseHoldersDataReturn {
   totalHolders: number;
   loading: boolean;
   error: string | null;
-  refetch: () => Promise<void>;
+  refetch: () => void;
+  // Pagination
+  currentPage: number;
+  itemsPerPage: number;
+  totalPages: number;
+  paginatedHolders: Holder[];
+  setCurrentPage: (page: number) => void;
+  setItemsPerPage: (itemsPerPage: number) => void;
 }
 
 export function useHoldersData({ 
   tokenName, 
   refreshInterval = 600000 // 10 minutes par défaut
 }: UseHoldersDataProps): UseHoldersDataReturn {
-  const [holders, setHolders] = useState<Holder[]>([]);
-  const [totalHolders, setTotalHolders] = useState<number>(0);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
+  // Pagination state
+  const [currentPage, setCurrentPage] = useState(1);
+  const [itemsPerPage, setItemsPerPage] = useState(10);
 
-  const fetchHoldersData = async () => {
-    try {
-      setLoading(true);
-      setError(null);
-      
-      const response = await HoldersAPI.getHolders(tokenName);
-      const formattedHolders = HoldersAPI.formatHoldersData(response);
-      
-      setHolders(formattedHolders);
-      setTotalHolders(response.holdersCount);
-    } catch (err) {
-      setError(err instanceof Error ? err.message : "Failed to fetch holders data");
-      console.error("Error fetching holders data:", err);
-    } finally {
-      setLoading(false);
-    }
-  };
+  const { data: response, loading, error, refetch } = useDataFetching<HoldersResponse>({
+    fetchFn: () => HoldersAPI.getHolders(tokenName),
+    dependencies: [tokenName],
+    refreshInterval,
+  });
 
+  // Format and process holders data
+  const allHolders = response ? HoldersAPI.formatHoldersData(response) : [];
+  const totalHolders = response?.holdersCount || 0;
+
+  // Calculer les données paginées
+  const totalPages = Math.ceil(totalHolders / itemsPerPage);
+  const paginatedHolders = HoldersAPI.getPaginatedHolders(allHolders, currentPage, itemsPerPage);
+
+  // Reset page quand itemsPerPage change
   useEffect(() => {
-    fetchHoldersData();
-
-    // Auto-refresh toutes les 10 minutes
-    const interval = setInterval(fetchHoldersData, refreshInterval);
-
-    return () => clearInterval(interval);
-  }, [tokenName, refreshInterval]);
+    setCurrentPage(1);
+  }, [itemsPerPage]);
 
   return {
-    holders,
+    holders: allHolders, // Tous les holders pour compatibilité
     totalHolders,
     loading,
     error,
-    refetch: fetchHoldersData,
+    refetch,
+    // Pagination
+    currentPage,
+    itemsPerPage,
+    totalPages,
+    paginatedHolders,
+    setCurrentPage,
+    setItemsPerPage,
   };
 }
 

@@ -23,29 +23,37 @@ export class HoldersAPI {
     }
   }
 
-  static async getHolders(tokenName: string, limit: number = 1000): Promise<HoldersResponse> {
-    return this.makeRequest<HoldersResponse>(`/holdersWithLimit/${tokenName}/${limit}`);
+  static async getHolders(tokenName: string): Promise<HoldersResponse> {
+    return this.makeRequest<HoldersResponse>(`/holders/${tokenName}`);
   }
 
   static formatHoldersData(response: HoldersResponse): Holder[] {
     const totalSupply = Object.values(response.holders).reduce((sum, balance) => sum + balance, 0);
     
     return Object.entries(response.holders)
-      .map(([address, balance], index) => ({
+      .map(([address, balance]) => ({
         address: this.formatAddress(address),
         balance,
         percentage: (balance / totalSupply) * 100,
-        rank: index + 1,
       }))
       .sort((a, b) => b.balance - a.balance) // Trier par balance décroissante
-      .slice(0, 10); // Prendre les 10 premiers
+      .map((holder, index) => ({
+        ...holder,
+        rank: index + 1, // Rank calculé après le tri
+      }));
+  }
+
+  static getPaginatedHolders(holders: Holder[], page: number, itemsPerPage: number): Holder[] {
+    const startIndex = (page - 1) * itemsPerPage;
+    const endIndex = startIndex + itemsPerPage;
+    return holders.slice(startIndex, endIndex);
   }
 
   private static formatAddress(address: string): string {
     if (address === "0x0000000000000000000000000000000000000000") {
       return "Dead Wallet";
     }
-    return `${address.slice(0, 6)}...${address.slice(-4)}`;
+    return address; // Retourne l'adresse complète
   }
 
   static formatBalance(balance: number): string {

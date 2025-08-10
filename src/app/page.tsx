@@ -2,7 +2,8 @@
 
 import Image from "next/image";
 import { TokenInfoCard } from "@/components/infoCard/InfoCard";
-import { TokenSection } from "@/components/sections/TokenSection";
+import { TokenSection } from "@/components/tokenSection/TokenSection";
+import { NFTSection } from "@/components/nftSection/NFTSection";
 import { useTokenData } from "@/hooks/useTokenData";
 import { TOKEN_IDS } from "@/config/constants";
 
@@ -24,7 +25,7 @@ const staticTokenInfo = {
 };
 
 export default function Home() {
-  const { tokenInfo, loading, error } = useTokenData({
+  const { tokenInfo } = useTokenData({
     tokenId: TOKEN_IDS.PIP,
     refreshInterval: 30000 // 30 secondes
   });
@@ -59,14 +60,17 @@ export default function Home() {
         priority
       />
       
-      {/* Contenu principal avec padding-right pour éviter la sidebar */}
-      <div className="relative z-10 pr-80">
+      {/* Contenu principal avec padding-left pour éviter la sidebar */}
+      <div className="relative z-10 pl-80">
         {/* Ici viendra le contenu principal qui scrollera */}
         <div className="min-h-screen p-8">
           <p className="text-white/80 text-lg mb-8">Welcome to the PIP token information dashboard</p>
           
           {/* Section Token Analytics */}
           <TokenSection tokenId={TOKEN_IDS.PIP} />
+          
+          {/* Section NFT Analytics */}
+          <NFTSection />
         </div>
       </div>
       

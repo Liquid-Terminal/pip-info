@@ -35,9 +35,9 @@ interface TokenInfoCardProps {
 
 export function TokenInfoCard({ tokenInfo }: TokenInfoCardProps) {
   return (
-    <div className="fixed right-0 top-0 h-screen w-80 bg-[#051728E5] border-l-2 border-[#83E9FF4D] shadow-[0_4px_24px_0_rgba(0,0,0,0.25)] backdrop-blur-sm overflow-y-auto">
+    <div className="fixed left-0 top-0 h-screen w-80 bg-[#051728E5] border-r-2 border-[#83E9FF4D] shadow-[0_4px_24px_0_rgba(0,0,0,0.25)] backdrop-blur-sm overflow-y-auto">
       <Card className="bg-transparent border-none shadow-none rounded-none h-full">
-        <div className="p-5 space-y-4">
+        <div className="pt-2 px-5 pb-5 space-y-4">
           <TokenHeader tokenInfo={tokenInfo} />
           <TokenInfoSection tokenInfo={tokenInfo.tokenInfo} />
           <ProjectInfoSection type={tokenInfo.type} chain={tokenInfo.chain} launch={tokenInfo.launch} />

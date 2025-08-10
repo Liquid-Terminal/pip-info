@@ -1,4 +1,4 @@
-import { FileText, Twitter, Globe, MessageCircle, Send, Github, ExternalLink } from "lucide-react";
+import { Twitter, Globe,  Send, ExternalLink } from "lucide-react";
 import Image from "next/image";
 
 interface LinksSectionProps {
