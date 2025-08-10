@@ -1,4 +1,4 @@
-import { ColumnConfig } from "@/components/ui/DataTable";
+import { ColumnConfig } from "@/components/ui/dataTable/types";
 import { Holder } from "@/lib/types/token";
 import { NFTHolder } from "@/lib/types/nft";
 
@@ -7,25 +7,25 @@ export const tokenColumns: ColumnConfig[] = [
   {
     key: 'address',
     label: 'Address',
-    width: 'w-1/2',
+    width: 'w-2/5',
     align: 'left',
   },
   {
     key: 'amount',
     label: 'Amount',
-    width: 'w-1/6',
+    width: 'w-1/5',
     align: 'right',
   },
   {
     key: 'value',
     label: 'Value',
-    width: 'w-1/6',
+    width: 'w-1/5',
     align: 'right',
   },
   {
     key: 'percentage',
     label: '% Held',
-    width: 'w-1/6',
+    width: 'w-1/5',
     align: 'right',
   },
 ];
@@ -35,19 +35,19 @@ export const nftColumns: ColumnConfig[] = [
   {
     key: 'address',
     label: 'Address',
-    width: 'w-1/2',
+    width: 'w-3/5',
     align: 'left',
   },
   {
     key: 'nftCount',
     label: 'NFT Count',
-    width: 'w-1/4',
+    width: 'w-1/5',
     align: 'right',
   },
   {
     key: 'percentage',
     label: '% Held',
-    width: 'w-1/4',
+    width: 'w-1/5',
     align: 'right',
   },
 ];

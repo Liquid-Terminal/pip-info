@@ -17,14 +17,14 @@ interface LinksSectionProps {
 export function LinksSection({ links }: LinksSectionProps) {
   return (
     <div className="pt-3 border-t border-[#83E9FF1A]">
-      <h3 className="text-sm font-semibold text-white mb-3">Links</h3>
+      <h3 className="text-sm text-white mb-3">Links</h3>
       <div className="grid grid-cols-2 gap-2">
         {links.website && (
           <a
             href={links.website}
             target="_blank"
             rel="noopener noreferrer"
-            className="flex items-center gap-2 p-2 rounded-md bg-[#112941] hover:bg-[#1a3654] transition-colors group"
+            className="flex items-center gap-2 p-2 rounded-md bg-[#112941] hover:bg-[#1a3654] transition-colors group cursor-pointer"
           >
             <Globe size={14} className="text-[#F9E370] flex-shrink-0" />
             <span className="text-xs text-white flex-1">Website</span>
@@ -37,7 +37,7 @@ export function LinksSection({ links }: LinksSectionProps) {
             href={links.telegram}
             target="_blank"
             rel="noopener noreferrer"
-            className="flex items-center gap-2 p-2 rounded-md bg-[#112941] hover:bg-[#1a3654] transition-colors group"
+            className="flex items-center gap-2 p-2 rounded-md bg-[#112941] hover:bg-[#1a3654] transition-colors group cursor-pointer"
           >
             <Send size={14} className="text-[#F9E370] flex-shrink-0" />
             <span className="text-xs text-white flex-1">Telegram</span>
@@ -50,7 +50,7 @@ export function LinksSection({ links }: LinksSectionProps) {
             href={links.twitter}
             target="_blank"
             rel="noopener noreferrer"
-            className="flex items-center gap-2 p-2 rounded-md bg-[#112941] hover:bg-[#1a3654] transition-colors group"
+            className="flex items-center gap-2 p-2 rounded-md bg-[#112941] hover:bg-[#1a3654] transition-colors group cursor-pointer"
           >
             <Twitter size={14} className="text-[#F9E370] flex-shrink-0" />
             <span className="text-xs text-white flex-1">Twitter</span>
@@ -63,7 +63,7 @@ export function LinksSection({ links }: LinksSectionProps) {
             href={links.trading}
             target="_blank"
             rel="noopener noreferrer"
-            className="flex items-center gap-2 p-2 rounded-md bg-[#112941] hover:bg-[#1a3654] transition-colors group"
+            className="flex items-center gap-2 p-2 rounded-md bg-[#112941] hover:bg-[#1a3654] transition-colors group cursor-pointer"
           >
             <Image
               src="https://app.hyperliquid.xyz/coins/HYPE_USDC.svg"
@@ -82,7 +82,7 @@ export function LinksSection({ links }: LinksSectionProps) {
             href={links.nft}
             target="_blank"
             rel="noopener noreferrer"
-            className="flex items-center gap-2 p-2 rounded-md bg-[#112941] hover:bg-[#1a3654] transition-colors group"
+            className="flex items-center gap-2 p-2 rounded-md bg-[#112941] hover:bg-[#1a3654] transition-colors group cursor-pointer"
           >
             <Image
               src="/driptrade.png"

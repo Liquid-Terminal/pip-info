@@ -27,7 +27,7 @@ export function TokenInfoSection({ tokenInfo }: TokenInfoSectionProps) {
 
   return (
     <div className="space-y-3 pt-3 border-t border-[#83E9FF1A]">
-      <h3 className="text-sm font-semibold text-white">Token Information</h3>
+      <h3 className="text-sm text-white">Token Information</h3>
       
       <div className="space-y-2">
         <div className="flex justify-between items-center">

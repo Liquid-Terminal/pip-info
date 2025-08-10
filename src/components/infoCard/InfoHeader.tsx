@@ -22,7 +22,7 @@ export function TokenHeader({ tokenInfo }: TokenHeaderProps) {
           height={32}
           className="rounded-lg"
         />
-        <h2 className="text-lg font-semibold text-white">{tokenInfo.name}</h2>
+        <h2 className="text-lg text-white">{tokenInfo.name}</h2>
       </div>
       <p className="text-xs text-white mb-3">{tokenInfo.description}</p>
       

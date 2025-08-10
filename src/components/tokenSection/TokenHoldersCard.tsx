@@ -1,10 +1,10 @@
 "use client";
 
-import { Users } from "lucide-react";
+import Image from "next/image";
 import { useHoldersData } from "@/hooks/useHoldersData";
 import { useTokenData } from "@/hooks/useTokenData";
 import { TOKEN_NAMES, API_CONFIG, TOKEN_IDS } from "@/config/constants";
-import { DataTable } from "@/components/ui/DataTable";
+import { DataTable } from "@/components/ui/dataTable";
 import { tokenColumns, getTokenAddress } from "@/config/tableConfigs";
 
 interface TokenHoldersCardProps {
@@ -20,6 +20,7 @@ export function TokenHoldersCard({ tokenId }: TokenHoldersCardProps) {
     totalHolders, 
     loading, 
     error,
+    lastUpdated,
     currentPage,
     itemsPerPage,
     totalPages,
@@ -74,9 +75,9 @@ export function TokenHoldersCard({ tokenId }: TokenHoldersCardProps) {
     <DataTable
       data={dataWithValue}
       columns={tokenColumns}
-      title="Token Holders"
-      subtitle="Token distribution"
-      icon={<Users className="w-4 h-4 text-white" />}
+      title="TOKEN HOLDERS"
+      subtitle=""
+      icon={<Image src="/token.png" alt="Token" width={100} height={100} className="w-8 h-8 rounded" />}
       colors={{
         primary: "from-blue-500",
         secondary: "to-cyan-500"
@@ -91,6 +92,8 @@ export function TokenHoldersCard({ tokenId }: TokenHoldersCardProps) {
       onPageChange={setCurrentPage}
       onItemsPerPageChange={setItemsPerPage}
       getAddressFromRow={getTokenAddress}
+      totalHolders={totalHolders}
+      lastUpdated={lastUpdated}
     />
   );
 }

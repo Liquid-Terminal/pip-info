@@ -16,6 +16,7 @@ interface UseHoldersDataReturn {
   loading: boolean;
   error: string | null;
   refetch: () => void;
+  lastUpdated: string;
   // Pagination
   currentPage: number;
   itemsPerPage: number;
@@ -42,6 +43,7 @@ export function useHoldersData({
   // Format and process holders data
   const allHolders = response ? HoldersAPI.formatHoldersData(response) : [];
   const totalHolders = response?.holdersCount || 0;
+  const lastUpdated = response?.lastUpdated || new Date().toISOString();
 
   // Calculer les données paginées
   const totalPages = Math.ceil(totalHolders / itemsPerPage);
@@ -58,6 +60,7 @@ export function useHoldersData({
     loading,
     error,
     refetch,
+    lastUpdated,
     // Pagination
     currentPage,
     itemsPerPage,

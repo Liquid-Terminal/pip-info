@@ -9,7 +9,7 @@ import { TOKEN_IDS } from "@/config/constants";
 
 // Données statiques pour la card
 const staticTokenInfo = {
-  name: "PIP Token",
+  name: "PIP",
   description: "PiP is a community-driven movement and Hyperliquid's mascot symbolizing hydration and flow. A passionate team is exploring merchandise and toys, with the community shaping its future. Stay hydrated and engaged.",
   banner: "/pip-backgroundsky-1-1024x1024.webp",
   type: "Memecoin",
@@ -64,10 +64,13 @@ export default function Home() {
       <div className="relative z-10 pl-80">
         {/* Ici viendra le contenu principal qui scrollera */}
         <div className="min-h-screen p-8">
-          <p className="text-white/80 text-lg mb-8">Welcome to the PIP token information dashboard</p>
+          <p className="text-white/80 text-lg mb-8 bg-[#1a1a1a]/80 px-4 py-2 rounded-lg inline-block">Welcome to the PIP token information dashboard</p>
           
           {/* Section Token Analytics */}
           <TokenSection tokenId={TOKEN_IDS.PIP} />
+          
+          {/* Séparation entre les sections */}
+          <div className="my-12 border-t border-white/20"></div>
           
           {/* Section NFT Analytics */}
           <NFTSection />

@@ -1,10 +1,10 @@
 "use client";
 
-import { Users } from "lucide-react";
+import Image from "next/image";
 import { useNFTHoldersServerData } from "@/hooks/useNFTHoldersServerData";
 import { NFTHoldersServerAPI } from "@/lib/api/nftHoldersServer";
 import { API_CONFIG } from "@/config/constants";
-import { DataTable } from "@/components/ui/DataTable";
+import { DataTable } from "@/components/ui/dataTable";
 import { nftColumns, getNFTAddress } from "@/config/tableConfigs";
 
 export function NFTHoldersCard() {
@@ -57,9 +57,9 @@ export function NFTHoldersCard() {
     <DataTable
       data={paginatedHolders}
       columns={nftColumns}
-      title="NFT Holders"
-      subtitle={`${totalNFTs.toLocaleString()} NFTs • Last updated: ${new Date(lastUpdated).toLocaleString()}`}
-      icon={<Users className="w-4 h-4 text-white" />}
+      title="NFT HOLDERS"
+      subtitle={`${totalNFTs.toLocaleString()} NFTs`}
+      icon={<Image src="/nft.png" alt="NFT" width={100} height={100} className="w-8 h-8 rounded" />}
       colors={{
         primary: "from-purple-500",
         secondary: "to-pink-500"
@@ -74,6 +74,8 @@ export function NFTHoldersCard() {
       onPageChange={setCurrentPage}
       onItemsPerPageChange={setItemsPerPage}
       getAddressFromRow={getNFTAddress}
+      totalHolders={totalHolders}
+      lastUpdated={lastUpdated}
     />
   );
 }
