@@ -1,4 +1,5 @@
 import { NFTHolder } from "@/lib/types/nft";
+import { NFTHoldersProcessor } from "./nftHoldersProcessor";
 
 interface ServerNFTResponse {
   holders: NFTHolder[];
@@ -14,38 +15,38 @@ interface ServerNFTResponse {
 }
 
 export class NFTHoldersServerAPI {
-  private static async makeRequest<T>(endpoint: string): Promise<T> {
+  static async getHolders(
+    page: number = 1,
+    itemsPerPage: number = 10
+  ): Promise<ServerNFTResponse> {
     try {
-      const response = await fetch(endpoint, {
-        method: "GET",
-        headers: {
-          "Content-Type": "application/json",
-        },
-      });
-
-      if (!response.ok) {
-        throw new Error(`HTTP error! status: ${response.status}`);
-      }
-
-      return await response.json();
+      // Récupérer et traiter les données CSV
+      const allData = await NFTHoldersProcessor.fetchAndProcessCSV();
+      
+      // Paginer les résultats
+      const paginatedData = NFTHoldersProcessor.paginateHolders(allData.holders, page, itemsPerPage);
+      
+      return {
+        holders: paginatedData.holders,
+        totalHolders: allData.totalHolders,
+        totalNFTs: allData.totalNFTs,
+        lastUpdated: allData.lastUpdated,
+        pagination: paginatedData.pagination,
+      };
     } catch (error) {
       console.error("NFT Holders Server API error:", error);
       throw error;
     }
   }
 
-  static async getHolders(
-    page: number = 1,
-    itemsPerPage: number = 10
-  ): Promise<ServerNFTResponse> {
-    const endpoint = `/api/nft-holders?page=${page}&itemsPerPage=${itemsPerPage}`;
-    return this.makeRequest<ServerNFTResponse>(endpoint);
-  }
-
   static async getAllHolders(): Promise<NFTHolder[]> {
-    const endpoint = "/api/nft-holders-csv";
-    const response = await this.makeRequest<{ holders: NFTHolder[] }>(endpoint);
-    return response.holders;
+    try {
+      const allData = await NFTHoldersProcessor.fetchAndProcessCSV();
+      return allData.holders;
+    } catch (error) {
+      console.error("NFT Holders Server API error:", error);
+      throw error;
+    }
   }
 
   static formatNFTCount(count: number): string {

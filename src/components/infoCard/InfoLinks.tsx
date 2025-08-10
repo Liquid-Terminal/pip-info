@@ -5,6 +5,7 @@ interface LinksSectionProps {
   links: {
     website?: string;
     telegram?: string;
+    pipMedia?: string;
     twitter?: string;
     discord?: string;
     github?: string;
@@ -18,7 +19,7 @@ export function LinksSection({ links }: LinksSectionProps) {
   return (
     <div className="pt-3 border-t border-[#83E9FF1A]">
       <h3 className="text-sm text-white mb-3">Links</h3>
-      <div className="grid grid-cols-2 gap-2">
+      <div className="flex flex-col gap-2">
         {links.website && (
           <a
             href={links.website}
@@ -41,6 +42,19 @@ export function LinksSection({ links }: LinksSectionProps) {
           >
             <Send size={14} className="text-[#F9E370] flex-shrink-0" />
             <span className="text-xs text-white flex-1">Telegram</span>
+            <ExternalLink size={12} className="text-gray-400 group-hover:text-[#83E9FF] transition-colors" />
+          </a>
+        )}
+
+        {links.pipMedia && (
+          <a
+            href={links.pipMedia}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="flex items-center gap-2 p-2 rounded-md bg-[#112941] hover:bg-[#1a3654] transition-colors group cursor-pointer"
+          >
+            <Send size={14} className="text-[#F9E370] flex-shrink-0" />
+            <span className="text-xs text-white flex-1">PIP Media</span>
             <ExternalLink size={12} className="text-gray-400 group-hover:text-[#83E9FF] transition-colors" />
           </a>
         )}

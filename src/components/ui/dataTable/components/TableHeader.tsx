@@ -18,7 +18,6 @@ export function TableHeader({
   title,
   subtitle,
   icon,
-  colors,
   onExport,
   dataLength,
   totalHolders,

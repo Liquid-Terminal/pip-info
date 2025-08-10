@@ -28,3 +28,35 @@ export const API_CONFIG = {
   HOLDERS_REFRESH_INTERVAL: 600000, // 10 minutes pour les holders
   NFT_HOLDERS_REFRESH_INTERVAL: 600000, // 10 minutes pour les NFT holders
 } as const;
+
+// Configuration WebSocket pour les prix en temps réel
+export const WEBSOCKET_CONFIG = {
+  HYPERLIQUID_WS_URL: "wss://api.hyperliquid.xyz/ws",
+  // Ajouter d'autres URLs WebSocket ici si nécessaire
+  // EXAMPLE_WS_URL: "wss://example.com/ws",
+} as const;
+
+// Configuration des coins pour HyperLiquid
+export const HYPERLIQUID_COINS = {
+  PIP: "@107",
+  // Ajouter d'autres coins ici quand tu fork le projet
+  // EXAMPLE: "@123",
+} as const;
+
+// Configuration des projets (pour faciliter le fork)
+export const PROJECT_CONFIG = {
+  PIP: {
+    tokenId: TOKEN_IDS.PIP,
+    tokenName: TOKEN_NAMES.PIP,
+    nftContractAddress: NFT_CONTRACT_ADDRESSES.PIP,
+    hyperliquidCoinId: HYPERLIQUID_COINS.PIP,
+    // Ajouter d'autres propriétés spécifiques au projet ici
+  },
+  // Ajouter d'autres projets ici quand tu fork
+  // EXAMPLE: {
+  //   tokenId: TOKEN_IDS.EXAMPLE,
+  //   tokenName: TOKEN_NAMES.EXAMPLE,
+  //   nftContractAddress: NFT_CONTRACT_ADDRESSES.EXAMPLE,
+  //   hyperliquidCoinId: HYPERLIQUID_COINS.EXAMPLE,
+  // },
+} as const;

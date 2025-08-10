@@ -1,32 +1,13 @@
-import { NextResponse } from 'next/server';
 import { NFT_CONTRACT_ADDRESSES } from '@/config/constants';
+import { NFTHolder, CSVHolder, ProcessedNFTData, PaginatedResult } from '@/lib/types/nft';
 
-interface CSVHolder {
-  address: string;
-  balance: number;
-}
-
-interface ProcessedNFTData {
-  holders: Array<{
-    address: string;
-    nftCount: number;
-    percentage: number;
-    rank: number;
-  }>;
-  totalHolders: number;
-  totalNFTs: number;
-  lastUpdated: string;
-}
-
-export async function GET() {
-  try {
+export class NFTHoldersProcessor {
+  static async fetchAndProcessCSV(): Promise<ProcessedNFTData> {
     const contractAddress = NFT_CONTRACT_ADDRESSES.PIP;
     
     // URL de l'API CSV Hyperscan
     const csvUrl = `https://www.hyperscan.com/api/v2/tokens/${contractAddress}/holders/csv?address_id=${contractAddress}&from_period=null&to_period=null&filter_type=null&filter_value=null`;
-    
-    console.log('Téléchargement du CSV depuis:', csvUrl);
-    
+        
     // Télécharger le CSV
     const response = await fetch(csvUrl, {
       method: 'GET',
@@ -40,14 +21,12 @@ export async function GET() {
     }
 
     const csvText = await response.text();
-    console.log('CSV téléchargé, taille:', csvText.length, 'caractères');
 
     // Parser le CSV en gérant les caractères de retour à la ligne
     const lines = csvText.trim().split('\n');
     const headers = lines[0].split(',').map(header => header.trim().replace(/\r/g, ''));
     
     if (headers[0] !== 'HolderAddress' || headers[1] !== 'Balance') {
-      console.log('Headers détectés:', headers);
       throw new Error('Format CSV invalide');
     }
 
@@ -68,7 +47,6 @@ export async function GET() {
       }
     }
 
-    console.log(`Traitement terminé: ${holders.length} holders, ${totalNFTs} NFTs total`);
 
     // Trier par balance décroissante et calculer les pourcentages
     const sortedHolders = holders
@@ -80,30 +58,30 @@ export async function GET() {
         rank: index + 1,
       }));
 
-    const processedData: ProcessedNFTData = {
+    return {
       holders: sortedHolders,
       totalHolders: sortedHolders.length,
       totalNFTs,
       lastUpdated: new Date().toISOString(),
     };
+  }
 
-    // Retourner avec cache Vercel (5 minutes)
-    return NextResponse.json(processedData, {
-      headers: {
-        'Cache-Control': 's-maxage=300, stale-while-revalidate=600',
-        'Content-Type': 'application/json',
-      },
-    });
-
-  } catch (error) {
-    console.error('Erreur lors du traitement du CSV NFT:', error);
+  static paginateHolders(holders: NFTHolder[], page: number, itemsPerPage: number): PaginatedResult {
+    const startIndex = (page - 1) * itemsPerPage;
+    const endIndex = startIndex + itemsPerPage;
+    const paginatedHolders = holders.slice(startIndex, endIndex);
     
-    return NextResponse.json(
-      { 
-        error: 'Erreur lors du traitement des données NFT',
-        details: error instanceof Error ? error.message : 'Erreur inconnue'
+    const totalPages = Math.ceil(holders.length / itemsPerPage);
+    const hasNextPage = page < totalPages;
+    
+    return {
+      holders: paginatedHolders,
+      pagination: {
+        page,
+        itemsPerPage,
+        totalPages,
+        hasNextPage,
       },
-      { status: 500 }
-    );
+    };
   }
 }

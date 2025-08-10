@@ -1,24 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-
-interface NFTHolder {
-  address: string;
-  nftCount: number;
-  percentage: number;
-  rank: number;
-}
-
-interface NFTResponse {
-  holders: NFTHolder[];
-  totalHolders: number;
-  totalNFTs: number;
-  lastUpdated: string;
-  pagination: {
-    page: number;
-    itemsPerPage: number;
-    totalPages: number;
-    hasNextPage: boolean;
-  };
-}
+import { NFTHoldersProcessor } from '@/lib/api/nftHoldersProcessor';
 
 export async function GET(request: NextRequest) {
   try {
@@ -26,40 +7,24 @@ export async function GET(request: NextRequest) {
     const page = parseInt(searchParams.get('page') || '1');
     const itemsPerPage = parseInt(searchParams.get('itemsPerPage') || '10');
     
-    // Récupérer les données depuis notre API de traitement
-    const response = await fetch(`${request.nextUrl.origin}/api/nft-holders-csv`);
+    // Récupérer et traiter les données CSV
+    const allData = await NFTHoldersProcessor.fetchAndProcessCSV();
     
-    if (!response.ok) {
-      throw new Error(`Erreur lors de la récupération des données: ${response.status}`);
-    }
+    // Paginer les résultats
+    const paginatedData = NFTHoldersProcessor.paginateHolders(allData.holders, page, itemsPerPage);
     
-    const data = await response.json();
-    
-    // Pagination côté serveur
-    const startIndex = (page - 1) * itemsPerPage;
-    const endIndex = startIndex + itemsPerPage;
-    const paginatedHolders = data.holders.slice(startIndex, endIndex);
-    
-    const totalPages = Math.ceil(data.totalHolders / itemsPerPage);
-    const hasNextPage = page < totalPages;
-    
-    const result: NFTResponse = {
-      holders: paginatedHolders,
-      totalHolders: data.totalHolders,
-      totalNFTs: data.totalNFTs,
-      lastUpdated: data.lastUpdated,
-      pagination: {
-        page,
-        itemsPerPage,
-        totalPages,
-        hasNextPage,
-      },
+    const result = {
+      holders: paginatedData.holders,
+      totalHolders: allData.totalHolders,
+      totalNFTs: allData.totalNFTs,
+      lastUpdated: allData.lastUpdated,
+      pagination: paginatedData.pagination,
     };
 
-    // Cache Vercel (2 minutes car les données viennent déjà du cache de l'API CSV)
+    // Cache Vercel (5 minutes)
     return NextResponse.json(result, {
       headers: {
-        'Cache-Control': 's-maxage=120, stale-while-revalidate=300',
+        'Cache-Control': 's-maxage=300, stale-while-revalidate=600',
         'Content-Type': 'application/json',
       },
     });

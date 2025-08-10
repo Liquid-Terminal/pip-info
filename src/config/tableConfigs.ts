@@ -2,6 +2,8 @@ import { ColumnConfig } from "@/components/ui/dataTable/types";
 import { Holder } from "@/lib/types/token";
 import { NFTHolder } from "@/lib/types/nft";
 
+
+
 // Configuration pour les colonnes du tableau Token Holders
 export const tokenColumns: ColumnConfig[] = [
   {
@@ -21,6 +23,7 @@ export const tokenColumns: ColumnConfig[] = [
     label: 'Value',
     width: 'w-1/5',
     align: 'right',
+
   },
   {
     key: 'percentage',

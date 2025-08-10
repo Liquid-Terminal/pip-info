@@ -2,6 +2,8 @@
 
 import Image from "next/image";
 import { useNFTHoldersServerData } from "@/hooks/useNFTHoldersServerData";
+import { useNFTFloorPrice } from "@/hooks/useNFTFloorPrice";
+import { useRealTimePrice } from "@/hooks/useRealTimePrice";
 import { NFTHoldersServerAPI } from "@/lib/api/nftHoldersServer";
 import { API_CONFIG } from "@/config/constants";
 import { DataTable } from "@/components/ui/dataTable";
@@ -23,6 +25,12 @@ export function NFTHoldersCard() {
   } = useNFTHoldersServerData({
     refreshInterval: API_CONFIG.NFT_HOLDERS_REFRESH_INTERVAL
   });
+
+  const { floorPriceHype, floorPriceUsd } = useNFTFloorPrice({
+    refreshInterval: 300000 // 5 minutes
+  });
+
+  const { price: realTimePrice } = useRealTimePrice({});
 
   const downloadCSV = async () => {
     if (!paginatedHolders.length) return;
@@ -58,7 +66,7 @@ export function NFTHoldersCard() {
       data={paginatedHolders}
       columns={nftColumns}
       title="NFT HOLDERS"
-      subtitle={`${totalNFTs.toLocaleString()} NFTs`}
+      subtitle={`${totalNFTs.toLocaleString()} NFTs • Floor: ${floorPriceHype.toFixed(2)} HYPE ($${(floorPriceHype * realTimePrice).toFixed(2)})`}
       icon={<Image src="/nft.png" alt="NFT" width={100} height={100} className="w-8 h-8 rounded" />}
       colors={{
         primary: "from-purple-500",

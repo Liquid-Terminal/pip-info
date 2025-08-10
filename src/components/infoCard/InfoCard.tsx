@@ -2,7 +2,6 @@
 
 import { Card } from "@/components/ui/card";
 import { TokenHeader } from "./InfoHeader";
-import { TokenInfoSection } from "./TokenInfo";
 import { ProjectInfoSection } from "./InfoSection";
 import { LinksSection } from "./InfoLinks";
 
@@ -22,6 +21,7 @@ interface TokenInfo {
   links: {
     website?: string;
     telegram?: string;
+    pipMedia?: string;
     twitter?: string;
     discord?: string;
     github?: string;
@@ -39,7 +39,6 @@ export function TokenInfoCard({ tokenInfo }: TokenInfoCardProps) {
       <Card className="bg-transparent border-none shadow-none rounded-none h-full">
         <div className="pt-2 px-5 pb-5 space-y-4">
           <TokenHeader tokenInfo={tokenInfo} />
-          <TokenInfoSection tokenInfo={tokenInfo.tokenInfo} />
           <ProjectInfoSection type={tokenInfo.type} chain={tokenInfo.chain} launch={tokenInfo.launch} />
           <LinksSection links={tokenInfo.links} />
         </div>

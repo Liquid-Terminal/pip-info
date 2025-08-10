@@ -7,9 +7,10 @@ export function renderDefaultCell(title: string, key: string, value: unknown) {
     );
   }
   if (key === "value") {
+    const numericValue = typeof value === "string" ? parseFloat(value.replace('$', '')) : parseFloat(String(value));
     return (
       <div className="text-white text-xs font-medium">
-        {typeof value === "string" ? value : `$${value}`}
+        ${numericValue.toLocaleString()}
       </div>
     );
   }

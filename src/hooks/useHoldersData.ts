@@ -43,7 +43,7 @@ export function useHoldersData({
   // Format and process holders data
   const allHolders = response ? HoldersAPI.formatHoldersData(response) : [];
   const totalHolders = response?.holdersCount || 0;
-  const lastUpdated = response?.lastUpdated || new Date().toISOString();
+  const lastUpdated = response?.lastUpdate ? new Date(response.lastUpdate * 1000).toISOString() : new Date().toISOString();
 
   // Calculer les données paginées
   const totalPages = Math.ceil(totalHolders / itemsPerPage);

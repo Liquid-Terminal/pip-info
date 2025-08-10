@@ -18,6 +18,7 @@ const staticTokenInfo = {
   links: {
     website: "https://pip.meme/",
     telegram: "https://t.me/piponhl",
+    pipMedia: "https://t.me/tickerispip",
     twitter: "https://x.com/PiPonHL",
     trading: "https://app.hyperliquid.xyz/trade/0xe85f43e1f91e3c8cdf3acbd7e0855b8e",
     nft: "https://drip.trade/collections/pip"
@@ -64,7 +65,6 @@ export default function Home() {
       <div className="relative z-10 pl-80">
         {/* Ici viendra le contenu principal qui scrollera */}
         <div className="min-h-screen p-8">
-          <p className="text-white/80 text-lg mb-8 bg-[#1a1a1a]/80 px-4 py-2 rounded-lg inline-block">Welcome to the PIP token information dashboard</p>
           
           {/* Section Token Analytics */}
           <TokenSection tokenId={TOKEN_IDS.PIP} />

@@ -42,3 +42,31 @@ export interface NFTCollectionInfo {
   floorPrice?: string;
   volume24h?: string;
 }
+
+export interface NFTFloorPriceResponse {
+  floorPriceHype: number;
+  floorPriceUsd: number;
+  lastUpdated: string;
+}
+
+export interface CSVHolder {
+  address: string;
+  balance: number;
+}
+
+export interface ProcessedNFTData {
+  holders: NFTHolder[];
+  totalHolders: number;
+  totalNFTs: number;
+  lastUpdated: string;
+}
+
+export interface PaginatedResult {
+  holders: NFTHolder[];
+  pagination: {
+    page: number;
+    itemsPerPage: number;
+    totalPages: number;
+    hasNextPage: boolean;
+  };
+}

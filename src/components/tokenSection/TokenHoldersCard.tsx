@@ -1,8 +1,10 @@
 "use client";
 
 import Image from "next/image";
+import { useEffect } from "react";
 import { useHoldersData } from "@/hooks/useHoldersData";
 import { useTokenData } from "@/hooks/useTokenData";
+import { useRealTimePrice } from "@/hooks/useRealTimePrice";
 import { TOKEN_NAMES, API_CONFIG, TOKEN_IDS } from "@/config/constants";
 import { DataTable } from "@/components/ui/dataTable";
 import { tokenColumns, getTokenAddress } from "@/config/tableConfigs";
@@ -36,6 +38,10 @@ export function TokenHoldersCard({ tokenId }: TokenHoldersCardProps) {
     refreshInterval: 30000
   });
 
+  const { price: realTimePrice } = useRealTimePrice({});
+
+
+
   const downloadCSV = () => {
     if (!paginatedHolders.length) return;
 
@@ -43,7 +49,7 @@ export function TokenHoldersCard({ tokenId }: TokenHoldersCardProps) {
     const csvContent = [
       headers.join(","),
       ...paginatedHolders.map(holder => {
-        const price = tokenInfo?.price ? parseFloat(tokenInfo.price.replace('$', '')) : 0;
+        const price = realTimePrice || (tokenInfo?.price ? parseFloat(tokenInfo.price.replace('$', '')) : 0);
         const value = (holder.balance * price).toFixed(2);
         return `${holder.rank},"${holder.address}","${holder.balance.toLocaleString()}","$${value}","${holder.percentage.toFixed(2)}%"`
       })
@@ -60,9 +66,9 @@ export function TokenHoldersCard({ tokenId }: TokenHoldersCardProps) {
     window.URL.revokeObjectURL(url);
   };
 
-  // Préparer les données avec la valeur calculée
+  // Préparer les données avec la valeur calculée en temps réel
   const dataWithValue = paginatedHolders.map(holder => {
-    const price = tokenInfo?.price ? parseFloat(tokenInfo.price.replace('$', '')) : 0;
+    const price = realTimePrice || (tokenInfo?.price ? parseFloat(tokenInfo.price.replace('$', '')) : 0);
     const value = (holder.balance * price).toFixed(2);
     return {
       ...holder,

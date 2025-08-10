@@ -4,6 +4,7 @@ import { useState, useEffect, useCallback, useRef } from "react";
 
 interface UseDataFetchingOptions<T> {
   fetchFn: () => Promise<T>;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   dependencies?: any[];
   refreshInterval?: number;
   enabled?: boolean;
@@ -70,6 +71,7 @@ export function useDataFetching<T>({
   }, [fetchFn, enabled, onSuccess, onError]);
 
   // Initial fetch
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   useEffect(() => {
     if (enabled) {
       fetchData();
@@ -79,6 +81,7 @@ export function useDataFetching<T>({
   }, [enabled, ...dependencies]);
 
   // Auto-refresh
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   useEffect(() => {
     if (!enabled || !refreshInterval) {
       if (intervalRef.current) {

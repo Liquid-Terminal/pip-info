@@ -11,7 +11,6 @@ interface TableFooterProps {
 }
 
 export function TableFooter({
-  title,
   totalItems,
   currentPage,
   totalPages,
