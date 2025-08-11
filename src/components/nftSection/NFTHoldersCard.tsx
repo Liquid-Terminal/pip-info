@@ -8,6 +8,7 @@ import { NFTHoldersServerAPI } from "@/lib/api/nftHoldersServer";
 import { API_CONFIG } from "@/config/constants";
 import { DataTable } from "@/components/ui/dataTable";
 import { nftColumns, getNFTAddress } from "@/config/tableConfigs";
+import { PROJECT_INFO } from "@/config/constants";
 
 export function NFTHoldersCard() {
   const { 
@@ -26,7 +27,7 @@ export function NFTHoldersCard() {
     refreshInterval: API_CONFIG.NFT_HOLDERS_REFRESH_INTERVAL
   });
 
-  const { floorPriceHype, floorPriceUsd } = useNFTFloorPrice({
+  const { floorPriceHype } = useNFTFloorPrice({
     refreshInterval: 300000 // 5 minutes
   });
 
@@ -67,7 +68,7 @@ export function NFTHoldersCard() {
       columns={nftColumns}
       title="NFT HOLDERS"
       subtitle={`${totalNFTs.toLocaleString()} NFTs • Floor: ${floorPriceHype.toFixed(2)} HYPE ($${(floorPriceHype * realTimePrice).toFixed(2)})`}
-      icon={<Image src="/nft.png" alt="NFT" width={100} height={100} className="w-8 h-8 rounded" />}
+      icon={<Image src={PROJECT_INFO.PIP.nftIcon} alt="NFT" width={100} height={100} className="w-8 h-8 rounded" />}
       colors={{
         primary: "from-purple-500",
         secondary: "to-pink-500"

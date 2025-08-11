@@ -1,14 +1,19 @@
-import { NFT_CONTRACT_ADDRESSES } from '@/config/constants';
+import { PROJECT_INFO } from '@/config/constants';
 import { NFTHolder, CSVHolder, ProcessedNFTData, PaginatedResult } from '@/lib/types/nft';
+
+// Cache for lastUpdated timestamp (10 minutes)
+const CACHE_DURATION = 10 * 60 * 1000; // 10 minutes
+let cachedTimestamp: string | null = null;
+let cacheTime: number = 0;
 
 export class NFTHoldersProcessor {
   static async fetchAndProcessCSV(): Promise<ProcessedNFTData> {
-    const contractAddress = NFT_CONTRACT_ADDRESSES.PIP;
+    const contractAddress = PROJECT_INFO.PIP.nftContractAddress;
     
-    // URL de l'API CSV Hyperscan
+    // Hyperscan API CSV URL
     const csvUrl = `https://www.hyperscan.com/api/v2/tokens/${contractAddress}/holders/csv?address_id=${contractAddress}&from_period=null&to_period=null&filter_type=null&filter_value=null`;
         
-    // Télécharger le CSV
+    // Download CSV
     const response = await fetch(csvUrl, {
       method: 'GET',
       headers: {
@@ -17,20 +22,20 @@ export class NFTHoldersProcessor {
     });
 
     if (!response.ok) {
-      throw new Error(`Erreur HTTP: ${response.status}`);
+      throw new Error(`HTTP error: ${response.status}`);
     }
 
     const csvText = await response.text();
 
-    // Parser le CSV en gérant les caractères de retour à la ligne
+    // Parse CSV handling line break characters
     const lines = csvText.trim().split('\n');
     const headers = lines[0].split(',').map(header => header.trim().replace(/\r/g, ''));
     
     if (headers[0] !== 'HolderAddress' || headers[1] !== 'Balance') {
-      throw new Error('Format CSV invalide');
+      throw new Error('Invalid CSV format');
     }
 
-    // Traiter les données
+    // Process data
     const holders: CSVHolder[] = [];
     let totalNFTs = 0;
 
@@ -47,8 +52,7 @@ export class NFTHoldersProcessor {
       }
     }
 
-
-    // Trier par balance décroissante et calculer les pourcentages
+    // Sort by decreasing balance and calculate percentages
     const sortedHolders = holders
       .sort((a, b) => b.balance - a.balance)
       .map((holder, index) => ({
@@ -58,11 +62,18 @@ export class NFTHoldersProcessor {
         rank: index + 1,
       }));
 
+    // Handle timestamp cache
+    const now = Date.now();
+    if (!cachedTimestamp || (now - cacheTime) > CACHE_DURATION) {
+      cachedTimestamp = new Date().toISOString();
+      cacheTime = now;
+    }
+
     return {
       holders: sortedHolders,
       totalHolders: sortedHolders.length,
       totalNFTs,
-      lastUpdated: new Date().toISOString(),
+      lastUpdated: cachedTimestamp,
     };
   }
 

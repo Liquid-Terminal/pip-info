@@ -1,6 +1,5 @@
 import { useState, useEffect, useRef } from 'react';
-import { WEBSOCKET_CONFIG, PROJECT_CONFIG } from '@/config/constants';
-
+import { WEBSOCKET_CONFIG, PROJECT_INFO } from '@/config/constants';
 
 interface UseRealTimePriceProps {
   coinId?: string;
@@ -15,15 +14,15 @@ interface UseRealTimePriceReturn {
   isConnected: boolean;
 }
 
-export function useRealTimePrice({ 
-  coinId = PROJECT_CONFIG.PIP.hyperliquidCoinId,
+export function useRealTimePrice({
+  coinId = PROJECT_INFO.PIP.hyperliquidCoinId,
 }: UseRealTimePriceProps): UseRealTimePriceReturn {
   const [price, setPrice] = useState<number>(0);
   const [lastUpdated, setLastUpdated] = useState<string>(new Date().toISOString());
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
   const [isConnected, setIsConnected] = useState<boolean>(false);
-  
+
   const wsRef = useRef<WebSocket | null>(null);
   const reconnectTimeoutRef = useRef<NodeJS.Timeout | null>(null);
 
@@ -32,7 +31,7 @@ export function useRealTimePrice({
       try {
         setLoading(true);
         setError(null);
-        
+
         const ws = new WebSocket(WEBSOCKET_CONFIG.HYPERLIQUID_WS_URL);
         wsRef.current = ws;
 
@@ -40,7 +39,7 @@ export function useRealTimePrice({
           console.log('WebSocket connected to HyperLiquid');
           setIsConnected(true);
           setLoading(false);
-          
+
           // Subscribe to HYPE trades
           ws.send(JSON.stringify({
             method: "subscribe",
@@ -51,7 +50,7 @@ export function useRealTimePrice({
         ws.onmessage = (event) => {
           try {
             const data = JSON.parse(event.data);
-            
+
             // Handle trades messages
             if (data.type === 'trades' && data.data && data.data.length > 0) {
               // Get the latest trade price
@@ -77,7 +76,7 @@ export function useRealTimePrice({
           console.log('WebSocket disconnected');
           setIsConnected(false);
           setLoading(false);
-          
+
           // Attempt to reconnect after 5 seconds
           if (reconnectTimeoutRef.current) {
             clearTimeout(reconnectTimeoutRef.current);

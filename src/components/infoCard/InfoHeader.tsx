@@ -1,14 +1,24 @@
+"use client";
+
 import Image from "next/image";
+import { PROJECT_INFO } from "@/config/constants";
+
+interface TokenInfo {
+  name: string;
+  description: string;
+  banner: string;
+  tokenInfo: {
+    symbol: string;
+    totalSupply: string;
+    marketCap: string;
+    price: string;
+    circulatingSupply?: string;
+    priceChange24h?: string;
+  };
+}
 
 interface TokenHeaderProps {
-  tokenInfo: {
-    name: string;
-    description: string;
-    banner: string;
-    tokenInfo: {
-      symbol: string;
-    };
-  };
+  tokenInfo: TokenInfo;
 }
 
 export function TokenHeader({ tokenInfo }: TokenHeaderProps) {
@@ -16,8 +26,8 @@ export function TokenHeader({ tokenInfo }: TokenHeaderProps) {
     <div>
       <div className="flex items-center gap-2 mb-2">
         <Image
-          src="/pending.jpg"
-          alt="PIP Logo"
+          src={PROJECT_INFO.PIP.projectLogo}
+          alt={`${PROJECT_INFO.PIP.name} Logo`}
           width={32}
           height={32}
           className="rounded-lg"
@@ -29,7 +39,7 @@ export function TokenHeader({ tokenInfo }: TokenHeaderProps) {
       {/* Banner */}
       <div className="relative w-full h-32 rounded-md overflow-hidden mb-4">
         <Image
-          src="/bannerInfoCard.jpg"
+          src={tokenInfo.banner}
           alt={`${tokenInfo.name} Banner`}
           fill
           className="object-cover object-center"

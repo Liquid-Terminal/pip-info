@@ -17,6 +17,8 @@ interface TokenInfo {
     totalSupply: string;
     marketCap: string;
     price: string;
+    circulatingSupply?: string;
+    priceChange24h?: string;
   };
   links: {
     website?: string;

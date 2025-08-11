@@ -1,8 +1,10 @@
+import { PROJECT_INFO } from "@/config/constants";
+
 export function renderDefaultCell(title: string, key: string, value: unknown) {
   if (key === "amount") {
     return (
       <div className="text-white text-xs font-medium">
-        {typeof value === "number" ? value.toLocaleString() : String(value)} PIP
+        {typeof value === "number" ? value.toLocaleString() : String(value)} {PROJECT_INFO.PIP.name}
       </div>
     );
   }

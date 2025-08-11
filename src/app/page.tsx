@@ -5,35 +5,17 @@ import { TokenInfoCard } from "@/components/infoCard/InfoCard";
 import { TokenSection } from "@/components/tokenSection/TokenSection";
 import { NFTSection } from "@/components/nftSection/NFTSection";
 import { useTokenData } from "@/hooks/useTokenData";
-import { TOKEN_IDS } from "@/config/constants";
-
-// Données statiques pour la card
-const staticTokenInfo = {
-  name: "PIP",
-  description: "PiP is a community-driven movement and Hyperliquid's mascot symbolizing hydration and flow. A passionate team is exploring merchandise and toys, with the community shaping its future. Stay hydrated and engaged.",
-  banner: "/pip-backgroundsky-1-1024x1024.webp",
-  type: "Memecoin",
-  chain: "HyperLiquid",
-  launch: "2024-01-15",
-  links: {
-    website: "https://pip.meme/",
-    telegram: "https://t.me/piponhl",
-    pipMedia: "https://t.me/tickerispip",
-    twitter: "https://x.com/PiPonHL",
-    trading: "https://app.hyperliquid.xyz/trade/0xe85f43e1f91e3c8cdf3acbd7e0855b8e",
-    nft: "https://drip.trade/collections/pip"
-  }
-};
+import { PROJECT_INFO } from "@/config/constants";
 
 export default function Home() {
   const { tokenInfo } = useTokenData({
-    tokenId: TOKEN_IDS.PIP,
-    refreshInterval: 30000 // 30 secondes
+    tokenId: PROJECT_INFO.PIP.tokenId,
+    refreshInterval: 30000 // 30 seconds
   });
 
-  // Combine les données statiques avec les données dynamiques de l'API
+  // Combine static data with dynamic API data
   const combinedTokenInfo = {
-    ...staticTokenInfo,
+    ...PROJECT_INFO.PIP,
     tokenInfo: tokenInfo ? {
       symbol: tokenInfo.symbol,
       totalSupply: tokenInfo.totalSupply,
@@ -42,7 +24,7 @@ export default function Home() {
       circulatingSupply: tokenInfo.circulatingSupply,
       priceChange24h: tokenInfo.priceChange24h,
     } : {
-      symbol: "PIP",
+      symbol: PROJECT_INFO.PIP.name,
       totalSupply: "Loading...",
       marketCap: "Loading...",
       price: "Loading...",
@@ -54,30 +36,29 @@ export default function Home() {
   return (
     <div className="min-h-screen relative">
       <Image
-        src="/pip-backgroundsky-1-1024x1024.webp"
+        src={PROJECT_INFO.PIP.background}
         alt="Background"
         fill
         className="object-cover"
         priority
       />
       
-      {/* Contenu principal avec padding-left pour éviter la sidebar */}
+      {/* Main content with padding-left to avoid sidebar */}
       <div className="relative z-10 pl-80">
-        {/* Ici viendra le contenu principal qui scrollera */}
-        <div className="min-h-screen p-8">
+        {/* Main content that will scroll */}
+        <div className="min-h-screen p-8">            
+          {/* Token Analytics Section */}
+          <TokenSection tokenId={PROJECT_INFO.PIP.tokenId} />
           
-          {/* Section Token Analytics */}
-          <TokenSection tokenId={TOKEN_IDS.PIP} />
-          
-          {/* Séparation entre les sections */}
+          {/* Separation between sections */}
           <div className="my-12 border-t border-white/20"></div>
           
-          {/* Section NFT Analytics */}
+          {/* NFT Analytics Section */}
           <NFTSection />
         </div>
       </div>
       
-      {/* Sidebar fixe à droite */}
+      {/* Fixed sidebar on the right */}
       <TokenInfoCard tokenInfo={combinedTokenInfo} />
     </div>
   );

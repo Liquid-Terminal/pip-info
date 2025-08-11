@@ -1,4 +1,5 @@
 import { NextResponse } from 'next/server';
+import { PROJECT_INFO } from '@/config/constants';
 
 interface NFTListing {
   price: string;
@@ -14,7 +15,7 @@ interface NFTResponse {
 
 export async function GET() {
   try {
-    const contractAddress = "0xbc4a26ba78ce05E8bCbF069Bbb87FB3E1dAC8DF8";
+    const contractAddress = PROJECT_INFO.PIP.nftContractAddress;
     const url = `https://drip.trade/api/collections/${contractAddress}/tokens?page=1&filters=%7B%22status%22%3A%22listed%22%2C%22sort%22%3A%22Price%20%E2%86%91%22%7D`;
     
     console.log('Récupération du floor price depuis:', url);

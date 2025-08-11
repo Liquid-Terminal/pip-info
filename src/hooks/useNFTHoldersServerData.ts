@@ -46,14 +46,17 @@ export function useNFTHoldersServerData({
     };
   }>({
     fetchFn: () => NFTHoldersServerAPI.getHolders(currentPage, itemsPerPage),
-    dependencies: [currentPage, itemsPerPage],
     refreshInterval,
-    onSuccess: (data) => {
-      setAllHolders(data.holders);
-      setTotalNFTs(data.totalNFTs);
-      setLastUpdated(data.lastUpdated);
-    },
   });
+
+  // Update local state when response changes
+  useEffect(() => {
+    if (response) {
+      setAllHolders(response.holders);
+      setTotalNFTs(response.totalNFTs);
+      setLastUpdated(response.lastUpdated);
+    }
+  }, [response]);
 
   const totalHolders = response?.totalHolders || 0;
   const totalPages = response?.pagination?.totalPages || 0;

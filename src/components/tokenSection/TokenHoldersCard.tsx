@@ -1,21 +1,21 @@
 "use client";
 
 import Image from "next/image";
-import { useEffect } from "react";
 import { useHoldersData } from "@/hooks/useHoldersData";
 import { useTokenData } from "@/hooks/useTokenData";
 import { useRealTimePrice } from "@/hooks/useRealTimePrice";
-import { TOKEN_NAMES, API_CONFIG, TOKEN_IDS } from "@/config/constants";
+import { PROJECT_INFO } from "@/config/constants";
 import { DataTable } from "@/components/ui/dataTable";
 import { tokenColumns, getTokenAddress } from "@/config/tableConfigs";
+import { Holder } from "@/lib/types/token";
 
-interface TokenHoldersCardProps {
-  tokenId: string;
-}
-
-export function TokenHoldersCard({ tokenId }: TokenHoldersCardProps) {
-  // tokenId is used for future compatibility
+export function TokenHoldersCard({ tokenId }: { tokenId: string }) {
   console.log('Token ID:', tokenId); // Temporary to avoid unused variable warning
+
+  const { tokenInfo } = useTokenData({
+    tokenId: PROJECT_INFO.PIP.tokenId,
+    refreshInterval: 30000
+  });
 
   const { 
     paginatedHolders, 
@@ -29,37 +29,25 @@ export function TokenHoldersCard({ tokenId }: TokenHoldersCardProps) {
     setCurrentPage,
     setItemsPerPage
   } = useHoldersData({
-    tokenName: TOKEN_NAMES.PIP,
-    refreshInterval: API_CONFIG.HOLDERS_REFRESH_INTERVAL
-  });
-
-  const { tokenInfo } = useTokenData({
-    tokenId: TOKEN_IDS.PIP,
+    tokenName: PROJECT_INFO.PIP.tokenName,
     refreshInterval: 30000
   });
 
   const { price: realTimePrice } = useRealTimePrice({});
 
-
-
   const downloadCSV = () => {
     if (!paginatedHolders.length) return;
 
-    const headers = ["Rank", "Address", "Amount", "Value", "Percentage"];
-    const csvContent = [
-      headers.join(","),
-      ...paginatedHolders.map(holder => {
-        const price = realTimePrice || (tokenInfo?.price ? parseFloat(tokenInfo.price.replace('$', '')) : 0);
-        const value = (holder.balance * price).toFixed(2);
-        return `${holder.rank},"${holder.address}","${holder.balance.toLocaleString()}","$${value}","${holder.percentage.toFixed(2)}%"`
-      })
-    ].join("\n");
-
-    const blob = new Blob([csvContent], { type: "text/csv" });
+    // Export CSV
+    const csvContent = `Address,Amount,Value,% Held\n${paginatedHolders.map((holder: Holder) => 
+      `${holder.address},${holder.balance.toLocaleString()},${(holder.balance * (realTimePrice || 0)).toFixed(2)},${((holder.balance / totalHolders) * 100).toFixed(2)}%`
+    ).join('\n')}`;
+    
+    const blob = new Blob([csvContent], { type: 'text/csv' });
     const url = window.URL.createObjectURL(blob);
-    const a = document.createElement("a");
+    const a = document.createElement('a');
     a.href = url;
-    a.download = `pip-holders-page-${currentPage}-${new Date().toISOString().split('T')[0]}.csv`;
+    a.download = `${PROJECT_INFO.PIP.exportPrefix}-${currentPage}-${new Date().toISOString().split('T')[0]}.csv`;
     document.body.appendChild(a);
     a.click();
     document.body.removeChild(a);
@@ -67,7 +55,7 @@ export function TokenHoldersCard({ tokenId }: TokenHoldersCardProps) {
   };
 
   // Préparer les données avec la valeur calculée en temps réel
-  const dataWithValue = paginatedHolders.map(holder => {
+  const dataWithValue = paginatedHolders.map((holder: Holder) => {
     const price = realTimePrice || (tokenInfo?.price ? parseFloat(tokenInfo.price.replace('$', '')) : 0);
     const value = (holder.balance * price).toFixed(2);
     return {
@@ -81,9 +69,9 @@ export function TokenHoldersCard({ tokenId }: TokenHoldersCardProps) {
     <DataTable
       data={dataWithValue}
       columns={tokenColumns}
-      title="TOKEN HOLDERS"
+      title="Token Holders"
       subtitle=""
-      icon={<Image src="/token.png" alt="Token" width={100} height={100} className="w-8 h-8 rounded" />}
+      icon={<Image src={PROJECT_INFO.PIP.tokenIcon} alt="Token" width={100} height={100} className="w-8 h-8 rounded" />}
       colors={{
         primary: "from-blue-500",
         secondary: "to-cyan-500"
