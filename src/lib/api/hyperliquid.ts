@@ -43,6 +43,7 @@ export class HyperLiquidAPI {
       marketCap: `$${(parseFloat(response.markPx) * parseFloat(response.circulatingSupply)).toLocaleString()}`,
       totalSupply: parseFloat(response.totalSupply).toLocaleString(),
       circulatingSupply: parseFloat(response.circulatingSupply).toLocaleString(),
+      burnedSupply: "", // Will be calculated in the hook
       deployTime: new Date(response.deployTime).toLocaleDateString(),
       deployer: response.deployer,
       priceChange24h: `${priceChange24h}%`,

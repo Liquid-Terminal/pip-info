@@ -40,7 +40,7 @@ export function TokenHoldersCard({ tokenId }: { tokenId: string }) {
 
     // Export CSV
     const csvContent = `Address,Amount,Value,% Held\n${paginatedHolders.map((holder: Holder) => 
-      `${holder.address},${holder.balance.toLocaleString()},${(holder.balance * (realTimePrice || 0)).toFixed(2)},${((holder.balance / totalHolders) * 100).toFixed(2)}%`
+              `${holder.address},${holder.balance.toLocaleString('en-US')},${(holder.balance * (realTimePrice || 0)).toFixed(2)},${((holder.balance / totalHolders) * 100).toFixed(2)}%`
     ).join('\n')}`;
     
     const blob = new Blob([csvContent], { type: 'text/csv' });

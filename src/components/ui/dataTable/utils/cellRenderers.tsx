@@ -3,23 +3,23 @@ import { PROJECT_INFO } from "@/config/constants";
 export function renderDefaultCell(title: string, key: string, value: unknown) {
   if (key === "amount") {
     return (
-      <div className="text-white text-xs font-medium">
-        {typeof value === "number" ? value.toLocaleString() : String(value)} {PROJECT_INFO.PIP.name}
+      <div className="text-white text-sm font-medium">
+        {typeof value === "number" ? value.toLocaleString('en-US') : String(value)} {PROJECT_INFO.PIP.name}
       </div>
     );
   }
   if (key === "value") {
     const numericValue = typeof value === "string" ? parseFloat(value.replace('$', '')) : parseFloat(String(value));
     return (
-      <div className="text-white text-xs font-medium">
-        ${numericValue.toLocaleString()}
+      <div className="text-white text-sm font-medium">
+        ${numericValue.toLocaleString('en-US')}
       </div>
     );
   }
   if (key === "nftCount") {
     return (
-      <div className="text-white text-xs font-medium">
-        {typeof value === "number" ? value.toLocaleString() : String(value)} NFTs
+      <div className="text-white text-sm font-medium">
+        {typeof value === "number" ? value.toLocaleString('en-US') : String(value)} NFTs
       </div>
     );
   }
@@ -30,7 +30,7 @@ export function renderDefaultCell(title: string, key: string, value: unknown) {
       : "from-blue-500 to-cyan-500";
     return (
       <div>
-        <div className="text-white text-xs font-medium">{percentage.toFixed(2)}%</div>
+        <div className="text-white text-sm font-medium">{percentage.toFixed(2)}%</div>
         <div className="w-16 h-1 bg-white/20 rounded-full mt-1 ml-auto">
           <div
             className={`h-full bg-gradient-to-r ${barColor} rounded-full`}
@@ -40,5 +40,5 @@ export function renderDefaultCell(title: string, key: string, value: unknown) {
       </div>
     );
   }
-  return <div className="text-white text-xs font-medium">{String(value)}</div>;
+  return <div className="text-white text-sm font-medium">{String(value)}</div>;
 }

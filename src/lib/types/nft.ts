@@ -70,3 +70,29 @@ export interface PaginatedResult {
     hasNextPage: boolean;
   };
 }
+
+// Types pour l'API HyperScan
+export interface HyperScanNFTResponse {
+  address: string;
+  address_hash: string;
+  circulating_market_cap: string | null;
+  decimals: number | null;
+  exchange_rate: string | null;
+  holders: string;
+  holders_count: string;
+  icon_url: string | null;
+  name: string;
+  symbol: string;
+  total_supply: string;
+  type: string;
+  volume_24h: string | null;
+}
+
+export interface HyperScanNFTInfo {
+  address: string;
+  name: string;
+  symbol: string;
+  totalSupply: string;
+  holdersCount: string;
+  type: string;
+}

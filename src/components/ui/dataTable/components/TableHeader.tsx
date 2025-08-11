@@ -20,7 +20,6 @@ export function TableHeader({
   icon,
   onExport,
   dataLength,
-  totalHolders,
   lastUpdated,
 }: TableHeaderProps) {
   return (
@@ -29,25 +28,19 @@ export function TableHeader({
         <div className="w-8 h-8 flex items-center justify-center">
           {icon}
         </div>
-        <div className="flex items-center gap-4">
-          <h3 className="text-xl text-white font-pip">{title}</h3>
-          <div className="flex items-center gap-3">
-            <div className="flex items-center gap-1">
-              <span className="text-sm text-[#f9e370] font-medium">{subtitle}</span>
-              {totalHolders && (
-                <>
-                  <span className="text-white/60">•</span>
-                  <span className="text-sm text-[#F9E370] font-medium">{totalHolders.toLocaleString()} holders</span>
-                </>
-              )}
+                    <div className="flex items-center gap-4">
+              <h3 className="text-xl text-white font-pip">{title}</h3>
+              <div className="flex items-center gap-3">
+                <div className="flex items-center gap-1">
+                  <span className="text-sm text-[#f9e370] font-medium">{subtitle}</span>
+                </div>
+              </div>
             </div>
-          </div>
-        </div>
       </div>
       <div className="flex items-center gap-3">
         {lastUpdated && (
-          <span className="text-xs text-white">
-            Last updated: {new Date(lastUpdated).toLocaleString()}
+          <span className="text-sm text-white">
+            Last updated: {new Date(lastUpdated).toLocaleString('en-US')}
           </span>
         )}
         <button

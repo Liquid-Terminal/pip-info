@@ -18,7 +18,6 @@ export async function GET() {
     const contractAddress = PROJECT_INFO.PIP.nftContractAddress;
     const url = `https://drip.trade/api/collections/${contractAddress}/tokens?page=1&filters=%7B%22status%22%3A%22listed%22%2C%22sort%22%3A%22Price%20%E2%86%91%22%7D`;
     
-    console.log('Récupération du floor price depuis:', url);
     
     const response = await fetch(url, {
       method: "GET",
@@ -46,7 +45,6 @@ export async function GET() {
     // Convertir le BigInt en nombre normal (diviser par 10^18)
     const priceInHype = parseFloat(floorPrice.replace('$bigint', '')) / Math.pow(10, 18);
     
-    console.log(`Floor price récupéré: ${priceInHype} HYPE ($${floorPriceUsd})`);
 
     const result = {
       floorPriceHype: priceInHype,

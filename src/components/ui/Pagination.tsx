@@ -71,7 +71,7 @@ export function Pagination({
 
       {/* Items info */}
       <div className="text-xs text-gray-400">
-        {startItem}-{endItem} of {totalItems.toLocaleString()}
+        {startItem}-{endItem} of {totalItems.toLocaleString('en-US')}
       </div>
 
       {/* Page navigation */}

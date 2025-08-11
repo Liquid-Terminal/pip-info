@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { useDataFetching } from "./useDataFetching";
 import { NFTHoldersServerAPI } from "@/lib/api/nftHoldersServer";
+import { NFTHoldersProcessor } from "@/lib/api/nftHoldersProcessor";
 import { NFTHolder } from "@/lib/types/nft";
 import { API_CONFIG } from "@/config/constants";
 
@@ -29,45 +30,49 @@ export function useNFTHoldersServerData({
 }: UseNFTHoldersServerDataProps): UseNFTHoldersServerDataReturn {
   const [currentPage, setCurrentPage] = useState(1);
   const [itemsPerPage, setItemsPerPage] = useState(10);
-  const [allHolders, setAllHolders] = useState<NFTHolder[]>([]);
+  const [allHoldersData, setAllHoldersData] = useState<NFTHolder[]>([]);
   const [totalNFTs, setTotalNFTs] = useState(0);
   const [lastUpdated, setLastUpdated] = useState("");
 
+  // Fetch all data once and handle pagination on client side
   const { data: response, loading, error, refetch } = useDataFetching<{
     holders: NFTHolder[];
     totalHolders: number;
     totalNFTs: number;
     lastUpdated: string;
-    pagination: {
-      page: number;
-      itemsPerPage: number;
-      totalPages: number;
-      hasNextPage: boolean;
-    };
   }>({
-    fetchFn: () => NFTHoldersServerAPI.getHolders(currentPage, itemsPerPage),
+    fetchFn: async () => {
+      const allData = await NFTHoldersServerAPI.getAllHolders();
+      const totalData = await NFTHoldersProcessor.fetchAndProcessCSV();
+      return {
+        holders: allData,
+        totalHolders: totalData.totalHolders,
+        totalNFTs: totalData.totalNFTs,
+        lastUpdated: totalData.lastUpdated,
+      };
+    },
     refreshInterval,
+    onSuccess: (data) => {
+      setAllHoldersData(data.holders);
+      setTotalNFTs(data.totalNFTs);
+      setLastUpdated(data.lastUpdated);
+    },
   });
 
-  // Update local state when response changes
-  useEffect(() => {
-    if (response) {
-      setAllHolders(response.holders);
-      setTotalNFTs(response.totalNFTs);
-      setLastUpdated(response.lastUpdated);
-    }
-  }, [response]);
-
+  // Client-side pagination
   const totalHolders = response?.totalHolders || 0;
-  const totalPages = response?.pagination?.totalPages || 0;
-  const paginatedHolders = allHolders;
+  const totalPages = Math.ceil(totalHolders / itemsPerPage);
+  
+  const startIndex = (currentPage - 1) * itemsPerPage;
+  const endIndex = startIndex + itemsPerPage;
+  const paginatedHolders = allHoldersData.slice(startIndex, endIndex);
 
   useEffect(() => {
     setCurrentPage(1);
   }, [itemsPerPage]);
 
   return {
-    holders: allHolders,
+    holders: allHoldersData,
     totalHolders,
     totalNFTs,
     lastUpdated,

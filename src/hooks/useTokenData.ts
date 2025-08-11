@@ -23,7 +23,17 @@ export function useTokenData({
   const { data: tokenInfo, loading, error, refetch } = useDataFetching<TokenInfo>({
     fetchFn: async () => {
       const response = await HyperLiquidAPI.getTokenDetails(tokenId);
-      return HyperLiquidAPI.formatTokenInfo(response);
+      const formattedInfo = HyperLiquidAPI.formatTokenInfo(response);
+      
+      // Calculate burned supply
+      const totalSupplyNum = parseFloat(response.totalSupply);
+      const circulatingSupplyNum = parseFloat(response.circulatingSupply);
+      const burnedSupplyNum = totalSupplyNum - circulatingSupplyNum;
+      
+      return {
+        ...formattedInfo,
+        burnedSupply: burnedSupplyNum.toLocaleString('fr-FR'),
+      };
     },
     dependencies: [tokenId],
     refreshInterval,

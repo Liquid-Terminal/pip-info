@@ -12,11 +12,11 @@ export function AddressCell({ rank, address, copiedAddress, onCopy }: AddressCel
 
   return (
     <div className="flex items-center gap-2">
-      <div className="w-5.5 h-5.5 bg-[#83E9FF] text-black text-xs font-bold rounded-full flex items-center justify-center flex-shrink-0">
+      <div className={`${rank > 999 ? 'w-8 h-6 text-sm' : 'w-6 h-6 text-sm'} bg-[#83E9FF] text-black font-bold rounded-full flex items-center justify-center flex-shrink-0`}>
         {rank}
       </div>
       <div className="flex items-center gap-2 min-w-0">
-        <span className="text-white text-xs font-mono truncate">{address}</span>
+        <span className="text-white text-sm font-mono truncate">{address}</span>
         <button
           onClick={() => onCopy(address)}
           className="p-1 hover:bg-[#1a3654] rounded transition-colors flex-shrink-0"

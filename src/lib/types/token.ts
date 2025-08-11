@@ -31,6 +31,7 @@ export interface TokenInfo {
   marketCap: string;
   totalSupply: string;
   circulatingSupply: string;
+  burnedSupply: string;
   deployTime: string;
   deployer: string;
   priceChange24h: string;

@@ -36,7 +36,6 @@ export function useRealTimePrice({
         wsRef.current = ws;
 
         ws.onopen = () => {
-          console.log('WebSocket connected to HyperLiquid');
           setIsConnected(true);
           setLoading(false);
 
@@ -73,7 +72,6 @@ export function useRealTimePrice({
         };
 
         ws.onclose = () => {
-          console.log('WebSocket disconnected');
           setIsConnected(false);
           setLoading(false);
 
