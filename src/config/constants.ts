@@ -54,10 +54,11 @@ export const PROJECT_INFO = {
     
     // Display information
     name: "PIP",
-    description: "PiP is a community-driven movement and Hyperliquid's mascot symbolizing hydration and flow. A passionate team is exploring merchandise and toys, with the community shaping its future. Stay hydrated and engaged.",
+    description: "PiP is a community-driven movement and Hyperliquid's mascot symbolizing hydration and flow. A team is exploring merchandise and toys, with the community shaping its future.",
     type: "Memecoin",
     chain: "HyperLiquid",
-    launch: "2024-10-30",
+    launchTokenDate: "2024-10-30",
+    launchNFTDate: "2025-05-12",
     
     // Assets
     banner: "/bannerInfoCard.jpg",

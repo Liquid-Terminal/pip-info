@@ -86,7 +86,7 @@ export function LinksSection({ links }: LinksSectionProps) {
               height={14}
               className="flex-shrink-0"
             />
-            <span className="text-xs text-white flex-1">Trade</span>
+            <span className="text-xs text-white flex-1">Trade tokens</span>
             <ExternalLink size={12} className="text-gray-400 group-hover:text-[#83E9FF] transition-colors" />
           </a>
         )}
@@ -105,7 +105,7 @@ export function LinksSection({ links }: LinksSectionProps) {
               height={14}
               className="flex-shrink-0"
             />
-            <span className="text-xs text-white flex-1">NFT</span>
+            <span className="text-xs text-white flex-1">Trade NFTs</span>
             <ExternalLink size={12} className="text-gray-400 group-hover:text-[#83E9FF] transition-colors" />
           </a>
         )}
