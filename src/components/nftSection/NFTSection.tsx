@@ -52,6 +52,24 @@ function calculateNFTHoldersDistribution(holders: NFTHolder[]) {
   return distribution;
 }
 
+// Function to calculate NFT supply breakdown (burned vs circulating)
+function calculateNFTSupplyBreakdown(holders: NFTHolder[], totalNFTs: number) {
+  const DEAD_WALLET_ADDRESS = "0x000000000000000000000000000000000000dEaD";
+  
+  // Find Dead Wallet holder
+  const deadWalletHolder = holders.find(holder => 
+    holder.address.toLowerCase() === DEAD_WALLET_ADDRESS.toLowerCase()
+  );
+  
+  const burnedNFTs = deadWalletHolder ? deadWalletHolder.nftCount : 0;
+  const circulatingNFTs = totalNFTs - burnedNFTs;
+  
+  return [
+    { label: "Circulating", value: circulatingNFTs, color: "#10B981" },
+    { label: "Burned", value: burnedNFTs, color: "#EF4444" },
+  ];
+}
+
 export function NFTSection() {
   // Get real NFT data
   const { nftInfo } = useNFTData({
@@ -63,19 +81,19 @@ export function NFTSection() {
     refreshInterval: 300000 // 5 minutes
   });
 
-  const { price: realTimePrice } = useRealTimePrice({});
-
   // Get all holders for distribution calculation
   const [allHolders, setAllHolders] = useState<NFTHolder[]>([]);
+  const [totalNFTs, setTotalNFTs] = useState(0);
   const [holdersLoading, setHoldersLoading] = useState(true);
 
   useEffect(() => {
     const fetchAllHolders = async () => {
       try {
         setHoldersLoading(true);
-        const { NFTHoldersServerAPI } = await import("@/lib/api/nftHoldersServer");
-        const holders = await NFTHoldersServerAPI.getAllHolders();
-        setAllHolders(holders);
+        const { NFTHoldersProcessor } = await import("@/lib/api/nftHoldersProcessor");
+        const data = await NFTHoldersProcessor.fetchAndProcessCSV();
+        setAllHolders(data.holders);
+        setTotalNFTs(data.totalNFTs);
       } catch (error) {
         console.error("Failed to fetch all holders:", error);
       } finally {
@@ -95,16 +113,19 @@ export function NFTSection() {
     { range: "1000+", percentage: 0, count: 0 }
   ] : calculateNFTHoldersDistribution(allHolders);
 
+  // Calculate real NFT supply breakdown (burned vs circulating)
+  const supplyBreakdown = (holdersLoading || allHolders.length === 0) ? [
+    { label: "Circulating", value: 0, color: "#10B981" },
+    { label: "Burned", value: 0, color: "#EF4444" },
+  ] : calculateNFTSupplyBreakdown(allHolders, totalNFTs);
+
   const nftStats = {
     totalHolders: parseInt(nftInfo?.holdersCount || "0"),
-    totalSupply: nftInfo?.totalSupply || "0",
-    floorPrice: `${floorPriceHype.toFixed(2)} HYPE ($${(floorPriceHype * realTimePrice).toFixed(2)})`,
+    totalSupply: nftInfo?.totalSupply || "7777",
+    floorPrice: `${floorPriceHype.toFixed(2)} HYPE`,
     contractAddress: nftInfo?.address || "",
     holdersDistribution,
-    supplyBreakdown: [
-      { label: "Listed", value: 1200, color: "#8B5CF6" },
-      { label: "Held", value: 6581, color: "#F59E0B" },
-    ]
+    supplyBreakdown
   };
 
   return (

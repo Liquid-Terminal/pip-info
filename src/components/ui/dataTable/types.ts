@@ -28,6 +28,7 @@ export interface DataTableProps<T> {
   getAddressFromRow: (row: T) => string;
   totalHolders?: number;
   lastUpdated?: string;
+  isNFT?: boolean;
 }
 
 export interface ColumnMetaInfo {

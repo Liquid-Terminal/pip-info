@@ -76,6 +76,7 @@ export function NFTHoldersCard() {
       getAddressFromRow={getNFTAddress}
       totalHolders={totalHolders}
       lastUpdated={lastUpdated}
+      isNFT={true}
     />
   );
 }

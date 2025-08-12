@@ -9,6 +9,7 @@ interface DataTableBodyProps<T> {
   getAddressFromRow: (row: T) => string;
   copiedAddress: string | null;
   onCopyAddress: (address: string) => void;
+  isNFT?: boolean;
 }
 
 export function DataTableBody<T>({
@@ -16,6 +17,7 @@ export function DataTableBody<T>({
   getAddressFromRow,
   copiedAddress,
   onCopyAddress,
+  isNFT = false,
 }: DataTableBodyProps<T>) {
   return (
     <TableBody>
@@ -40,6 +42,7 @@ export function DataTableBody<T>({
                     address={getAddressFromRow(row.original)}
                     copiedAddress={copiedAddress}
                     onCopy={onCopyAddress}
+                    isNFT={isNFT}
                   />
                 ) : (
                   flexRender(cell.column.columnDef.cell, cell.getContext())

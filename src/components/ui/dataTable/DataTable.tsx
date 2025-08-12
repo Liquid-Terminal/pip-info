@@ -27,6 +27,7 @@ export function DataTable<T>({
   getAddressFromRow,
   totalHolders,
   lastUpdated,
+  isNFT = false,
 }: DataTableProps<T>) {
   const { table, tableState, copyAddress } = useDataTable({
     data,
@@ -96,6 +97,7 @@ export function DataTable<T>({
             getAddressFromRow={getAddressFromRow}
             copiedAddress={tableState.copiedAddress}
             onCopyAddress={copyAddress}
+            isNFT={isNFT}
           />
         </Table>
 

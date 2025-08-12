@@ -1,5 +1,8 @@
 "use client";
 
+import { useState } from "react";
+import { Copy, Check, ExternalLink } from "lucide-react";
+
 interface StatsCardsProps {
   type: 'token' | 'nft';
   stats: {
@@ -26,6 +29,30 @@ interface StatsCardsProps {
 }
 
 export function StatsCards({ type, stats }: StatsCardsProps) {
+  const [copiedAddress, setCopiedAddress] = useState<string | null>(null);
+
+  // Function to shorten address
+  const shortenAddress = (address: string) => {
+    if (!address) return '';
+    return `${address.slice(0, 6)}...${address.slice(-4)}`;
+  };
+
+  // Function to copy address
+  const copyAddress = async (address: string) => {
+    try {
+      await navigator.clipboard.writeText(address);
+      setCopiedAddress(address);
+      setTimeout(() => setCopiedAddress(null), 2000);
+    } catch (err) {
+      console.error('Failed to copy address:', err);
+    }
+  };
+
+  // Function to open address in explorer
+  const openAddressInExplorer = (address: string) => {
+    window.open(`https://hyperevmscan.io/address/${address}`, '_blank');
+  };
+
   return (
     <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 mb-6">
       {/* Left Card - Statistics */}
@@ -74,7 +101,35 @@ export function StatsCards({ type, stats }: StatsCardsProps) {
               </div>
               <div className="text-center">
                 <div className="text-xs text-white font-medium">Contract</div>
-                <div className="text-sm font-bold text-white text-xs truncate">{stats.contractAddress}</div>
+                <div className="flex items-center justify-center gap-1">
+                  <span 
+                    className="text-sm font-bold text-white cursor-pointer hover:text-[#83E9FF] transition-colors"
+                    onClick={() => openAddressInExplorer(stats.contractAddress || '')}
+                    title="Click to view on HyperEVM Scan"
+                  >
+                    {shortenAddress(stats.contractAddress || '')}
+                  </span>
+                  <div className="flex gap-1">
+                    <button
+                      onClick={() => openAddressInExplorer(stats.contractAddress || '')}
+                      className="p-0.5 hover:bg-[#1a3654] rounded transition-colors"
+                      title="View on HyperEVM Scan"
+                    >
+                      <ExternalLink className="w-3 h-3 text-white/70 hover:text-white" />
+                    </button>
+                    <button
+                      onClick={() => copyAddress(stats.contractAddress || '')}
+                      className="p-0.5 hover:bg-[#1a3654] rounded transition-colors"
+                      title="Copy address"
+                    >
+                      {copiedAddress === stats.contractAddress ? (
+                        <Check className="w-3 h-3 text-green-400" />
+                      ) : (
+                        <Copy className="w-3 h-3 text-white/70 hover:text-white" />
+                      )}
+                    </button>
+                  </div>
+                </div>
               </div>
 
             </>
@@ -109,9 +164,9 @@ export function StatsCards({ type, stats }: StatsCardsProps) {
           </div>
           
           {/* Pie Chart - Right */}
-          {type === 'token' && stats.supplyBreakdown && (
+          {stats.supplyBreakdown && (
             <div className="flex-shrink-0">
-              <h4 className="text-sm font-medium text-white mb-3 text-center">Supply Distribution</h4>
+              <h4 className="text-sm font-medium text-white mb-3 text-center">{type === 'token' ? 'Supply' : 'NFT'} Distribution</h4>
               <div className="flex items-center gap-4">
                 {/* Pie Chart */}
                 <div className="relative w-32 h-32">
@@ -146,7 +201,7 @@ export function StatsCards({ type, stats }: StatsCardsProps) {
                               tooltip.className = 'absolute bg-[#112941] border border-[#83E9FF1A] rounded px-2 py-1 text-xs text-white z-50';
                               tooltip.innerHTML = `
                                 <div class="font-medium">${item.label}</div>
-                                <div class="text-white/70">${item.value.toLocaleString('en-US')} (${percentage.toFixed(1)}%)</div>
+                                <div class="text-white/70">${item.value.toLocaleString('en-US')} (${percentage.toFixed(2)}%)</div>
                               `;
                               tooltip.style.left = e.clientX + 10 + 'px';
                               tooltip.style.top = e.clientY - 10 + 'px';
@@ -176,7 +231,7 @@ export function StatsCards({ type, stats }: StatsCardsProps) {
                       />
                       <span className="text-xs text-white">{item.label}</span>
                       <span className="text-xs text-white/70 ml-auto">
-                        {((item.value / (stats.supplyBreakdown?.reduce((sum, i) => sum + i.value, 0) || 1)) * 100).toFixed(1)}%
+                        {((item.value / (stats.supplyBreakdown?.reduce((sum, i) => sum + i.value, 0) || 1)) * 100).toFixed(2)}%
                       </span>
                     </div>
                   ))}
